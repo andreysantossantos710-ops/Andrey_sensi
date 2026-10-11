@@ -1,0 +1,769 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>FF Auxiliar VIP PRO</title>
+  <style>
+    :root {
+      --bg-dark: #07090e;
+      --card-bg: #111420;
+      --card-border: #1e2538;
+      --accent-red: #ff2a4b;
+      --accent-gold: #ffb703;
+      --accent-green: #00f080;
+      --accent-cyan: #00e5ff;
+      --text-main: #f0f4f8;
+      --text-muted: #8a99ad;
+      --cross-color: #00ff00;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(255, 42, 75, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(0, 229, 255, 0.08) 0%, transparent 40%);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 450px;
+      padding-bottom: 50px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    header h1 {
+      color: var(--accent-red);
+      font-size: 1.8rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 800;
+      text-shadow: 0 0 15px rgba(255, 42, 75, 0.6);
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 4px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--accent-gold), #ff8800);
+      color: #000;
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 12px;
+      margin-top: 8px;
+      text-transform: uppercase;
+      box-shadow: 0 0 10px rgba(255, 183, 3, 0.4);
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 16px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent-red), transparent);
+    }
+
+    .card h2 {
+      font-size: 1.1rem;
+      color: var(--accent-gold);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-shadow: 0 0 8px rgba(255, 183, 3, 0.3);
+    }
+
+    label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 10px;
+      display: block;
+      font-weight: 600;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      background: #090c14;
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 8px rgba(0, 229, 255, 0.3);
+    }
+
+    input[type="color"] {
+      height: 45px;
+      padding: 4px;
+      cursor: pointer;
+    }
+
+    input[type="range"] {
+      accent-color: var(--accent-red);
+      cursor: pointer;
+    }
+
+    button {
+      background: linear-gradient(135deg, var(--accent-red), #c0112b);
+      border: none;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      margin-top: 15px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 15px rgba(255, 42, 75, 0.4);
+      transition: transform 0.1s, opacity 0.2s, box-shadow 0.2s;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    .btn-launch {
+      background: linear-gradient(135deg, #ff8800, var(--accent-red));
+      font-size: 1rem;
+      box-shadow: 0 4px 15px rgba(255, 136, 0, 0.4);
+    }
+
+    .result-box {
+      background: #07090e;
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 14px;
+      border: 1px dashed var(--accent-gold);
+    }
+
+    .sensi-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--card-border);
+      font-size: 0.9rem;
+    }
+
+    .sensi-item:last-child {
+      border-bottom: none;
+    }
+
+    /* HUD Crosshair Canvas Overlay */
+    #crosshair {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 20px;
+      height: 20px;
+      pointer-events: none;
+      z-index: 99998;
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Crosshair Variants */
+    .cross-plus {
+      position: relative;
+    }
+    .cross-plus::before, .cross-plus::after {
+      content: '';
+      position: absolute;
+      background: var(--cross-color, #00ff00);
+      box-shadow: 0 0 6px var(--cross-color, #00ff00);
+    }
+    .cross-plus::before {
+      top: 50%; left: 0; width: 100%; height: 2px; transform: translateY(-50%);
+    }
+    .cross-plus::after {
+      left: 50%; top: 0; height: 100%; width: 2px; transform: translateX(-50%);
+    }
+
+    .cross-circle-dot {
+      border: 2px solid var(--cross-color, #00ff00);
+      border-radius: 50%;
+      background: transparent !important;
+      box-shadow: 0 0 6px var(--cross-color, #00ff00);
+      position: relative;
+    }
+    .cross-circle-dot::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 4px;
+      height: 4px;
+      background-color: var(--cross-color, #00ff00);
+      border-radius: 50%;
+      box-shadow: 0 0 4px var(--cross-color, #00ff00);
+    }
+
+    .cross-dot {
+      background-color: var(--cross-color, #00ff00);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--cross-color, #00ff00);
+    }
+
+    /* Floating Widget Bubble Icon (Always Visible on Screen) */
+    #floatingBubble {
+      position: fixed;
+      top: 150px;
+      right: 15px;
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-red), var(--accent-cyan));
+      border: 2px solid #fff;
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.5rem;
+      cursor: pointer;
+      z-index: 99999;
+      touch-action: none;
+    }
+
+    /* Floating Draggable Overlay Menu */
+    #floatingMenu {
+      position: fixed;
+      top: 100px;
+      left: 20px;
+      width: 320px;
+      background: rgba(17, 20, 32, 0.96);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--accent-cyan);
+      border-radius: 14px;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.85), 0 0 20px rgba(0, 229, 255, 0.25);
+      z-index: 99999;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      max-height: 80vh;
+    }
+
+    .floating-header {
+      background: linear-gradient(90deg, #121828, #1c263d);
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: move;
+      border-bottom: 1px solid var(--card-border);
+      touch-action: none;
+    }
+
+    .floating-header h3 {
+      font-size: 0.85rem;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .floating-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      width: auto;
+      padding: 0 6px;
+      margin: 0;
+      cursor: pointer;
+    }
+
+    .floating-close:hover {
+      color: var(--accent-red);
+    }
+
+    .floating-body {
+      padding: 12px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .floating-body .card {
+      margin-bottom: 0;
+      padding: 12px;
+      background: #090c14;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Botão Flutuante Fixo (Ícone Minimalista na Tela) -->
+  <div id="floatingBubble" onclick="toggleFloatingMenu()" title="Abrir Menu Flutuante">🎯</div>
+
+  <!-- Menu Overlay Flutuante Arrastável -->
+  <div id="floatingMenu">
+    <div class="floating-header" id="floatingHeader">
+      <h3>❖ PAINEL FLUTUANTE VIP</h3>
+      <button class="floating-close" onclick="closeFloatingMenu()">✕</button>
+    </div>
+    <div class="floating-body">
+      <!-- Game Launcher Card (Floating) -->
+      <div class="card" style="border-color: var(--accent-red);">
+        <h2>🎮 Inicializador</h2>
+        <label>Free Fire Versão:</label>
+        <select class="game-version-select">
+          <option value="normal">Free Fire (Normal)</option>
+          <option value="max">Free Fire MAX</option>
+        </select>
+        <button onclick="launchGame()" class="btn-launch" style="padding: 9px; font-size: 0.85rem;">🔥 Iniciar Jogo</button>
+      </div>
+
+      <!-- Crosshair Card (Floating) -->
+      <div class="card">
+        <h2>🎯 Mira na Tela</h2>
+        <label>Estilo:</label>
+        <select class="cross-style-select">
+          <option value="plus">Cruz (+)</option>
+          <option value="circle-dot">Círculo com ponto</option>
+          <option value="dot">Ponto</option>
+        </select>
+
+        <label>Cor:</label>
+        <input type="color" class="cross-color-input" value="#00ff00">
+
+        <label>Tamanho:</label>
+        <input type="range" class="cross-size-input" min="8" max="40" value="16">
+
+        <button onclick="toggleCrosshair()" class="btn-cross-toggle" style="padding: 9px; font-size: 0.85rem;">Ativar Mira</button>
+      </div>
+
+      <!-- Sensi Generator Card (Floating) -->
+      <div class="card">
+        <h2>⚡ Gerador Sensi</h2>
+        <label>Marca:</label>
+        <select class="brand-select">
+          <option value="samsung">Samsung</option>
+          <option value="xiaomi">Xiaomi / Poco</option>
+          <option value="motorola">Motorola</option>
+          <option value="iphone">iPhone / iOS</option>
+          <option value="outros">Outra Marca</option>
+        </select>
+
+        <label>Estilo:</label>
+        <select class="playstyle-select">
+          <option value="rush">Rushador</option>
+          <option value="balanced">Equilibrada</option>
+          <option value="precision">Precisão</option>
+        </select>
+
+        <button onclick="generateSensi()" style="padding: 9px; font-size: 0.85rem;">Gerar Sensibilidade</button>
+
+        <div class="result-box sensi-results" style="display: none;">
+          <div class="sensi-item"><span>Geral:</span> <strong class="sGeral">0</strong></div>
+          <div class="sensi-item"><span>Red Dot:</span> <strong class="sRed">0</strong></div>
+          <div class="sensi-item"><span>2x:</span> <strong class="s2x">0</strong></div>
+          <div class="sensi-item"><span>4x:</span> <strong class="s4x">0</strong></div>
+          <div class="sensi-item"><span>AWM:</span> <strong class="sAwm">0</strong></div>
+          <div class="sensi-item"><span>DPI:</span> <strong class="sDpi" style="color: var(--accent-gold);">0</strong></div>
+          <div class="sensi-item"><span>Botão:</span> <strong class="sBtn" style="color: var(--accent-red);">0%</strong></div>
+        </div>
+      </div>
+
+      <!-- Optimizer Card (Floating) -->
+      <div class="card">
+        <h2>🚀 Otimização</h2>
+        <button onclick="optimizeDevice()" style="background: linear-gradient(135deg, var(--accent-green), #008f4c); padding: 9px; font-size: 0.85rem;">
+          Otimizar Touch e Sistema
+        </button>
+        <div class="opt-result" style="margin-top: 8px; font-size: 0.75rem; color: var(--accent-green); text-align: center; white-space: pre-line;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Painel Principal (Web) -->
+  <div class="container">
+    <header>
+      <h1>FF AUXILIAR VIP</h1>
+      <p>Gerador de Sensibilidade & Mira Assistida Overlay</p>
+      <span class="badge">Versão Ultra VIP v3.1</span>
+    </header>
+
+    <!-- Game Launcher Card -->
+    <div class="card" style="border-color: var(--accent-red);">
+      <h2>🎮 Abrir Jogo Diretamente</h2>
+      <label>Selecione a versão do Free Fire:</label>
+      <select class="game-version-select">
+        <option value="normal">Free Fire (Normal)</option>
+        <option value="max">Free Fire MAX</option>
+      </select>
+      <button onclick="launchGame()" class="btn-launch">🔥 Ativar & Iniciar Free Fire</button>
+    </div>
+
+    <!-- Crosshair Card -->
+    <div class="card">
+      <h2>🎯 Mira Flutuante na Tela</h2>
+      <label>Estilo da Mira:</label>
+      <select class="cross-style-select">
+        <option value="plus">Cruz (+)</option>
+        <option value="circle-dot">Círculo com ponto no meio</option>
+        <option value="dot">Ponto</option>
+      </select>
+
+      <label>Cor da Mira:</label>
+      <input type="color" class="cross-color-input" value="#00ff00">
+
+      <label>Tamanho (px):</label>
+      <input type="range" class="cross-size-input" min="8" max="40" value="16">
+
+      <button onclick="toggleCrosshair()" class="btn-cross-toggle">Ativar Mira Visual</button>
+    </div>
+
+    <!-- Sensi Generator Card -->
+    <div class="card">
+      <h2>⚡ Criador de Sensibilidade</h2>
+      <label>Marca do Aparelho:</label>
+      <select class="brand-select">
+        <option value="samsung">Samsung</option>
+        <option value="xiaomi">Xiaomi / Poco</option>
+        <option value="motorola">Motorola</option>
+        <option value="iphone">iPhone / iOS</option>
+        <option value="outros">Outra Marca</option>
+      </select>
+
+      <label>Estilo de Jogo:</label>
+      <select class="playstyle-select">
+        <option value="rush">Rushador (Mais Rápida)</option>
+        <option value="balanced">Equilibrada (Geral)</option>
+        <option value="precision">Precisão / Longa Distância</option>
+      </select>
+
+      <button onclick="generateSensi()">Gerar Sensibilidade Perfeita</button>
+
+      <div class="result-box sensi-results" style="display: none;">
+        <div class="sensi-item"><span>Geral:</span> <strong class="sGeral">0</strong></div>
+        <div class="sensi-item"><span>Ponto Vermelho (Red Dot):</span> <strong class="sRed">0</strong></div>
+        <div class="sensi-item"><span>Mira 2x:</span> <strong class="s2x">0</strong></div>
+        <div class="sensi-item"><span>Mira 4x:</span> <strong class="s4x">0</strong></div>
+        <div class="sensi-item"><span>AWM / Olhadinha:</span> <strong class="sAwm">0</strong></div>
+        <div class="sensi-item"><span>DPI Recomendada:</span> <strong class="sDpi" style="color: var(--accent-gold);">0</strong></div>
+        <div class="sensi-item"><span>Botão de Atirar:</span> <strong class="sBtn" style="color: var(--accent-red);">0%</strong></div>
+      </div>
+    </div>
+
+    <!-- Optimizer Card -->
+    <div class="card">
+      <h2>🚀 Otimização do Sistema</h2>
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">
+        Otimize a resposta do touch screen e descarte o lag.
+      </p>
+      <button onclick="optimizeDevice()" style="background: linear-gradient(135deg, var(--accent-green), #008f4c);">
+        Otimizar Memória e Touch
+      </button>
+      <div class="opt-result" style="margin-top: 10px; font-size: 0.85rem; color: var(--accent-green); text-align: center; white-space: pre-line;"></div>
+    </div>
+  </div>
+
+  <!-- HUD Crosshair Element -->
+  <div id="crosshair"></div>
+
+  <script>
+    // Sync function across controls (Principal <-> Flutuante)
+    function syncControls(selector, value) {
+      document.querySelectorAll(selector).forEach(el => {
+        if (el.value !== value) {
+          el.value = value;
+        }
+      });
+    }
+
+    // Launch Game Function
+    function launchGame() {
+      const version = document.querySelector('.game-version-select').value;
+      let intentUrl = version === 'max' 
+        ? 'intent://#Intent;scheme=freefiremax;package=com.dts.freefiremax;end'
+        : 'intent://#Intent;scheme=freefire;package=com.dts.freefireth;end';
+      window.location.href = intentUrl;
+    }
+
+    // Synchronize game version selects
+    document.querySelectorAll('.game-version-select').forEach(el => {
+      el.addEventListener('change', (e) => syncControls('.game-version-select', e.target.value));
+    });
+
+    // Crosshair Logic
+    let isCrossActive = false;
+    const crosshairEl = document.getElementById('crosshair');
+
+    function toggleCrosshair() {
+      isCrossActive = !isCrossActive;
+      document.querySelectorAll('.btn-cross-toggle').forEach(btn => {
+        if (isCrossActive) {
+          btn.innerText = 'Desativar Mira';
+          btn.style.background = 'var(--accent-red)';
+        } else {
+          btn.innerText = 'Ativar Mira Visual';
+          btn.style.background = 'linear-gradient(135deg, var(--accent-red), #c0112b)';
+        }
+      });
+
+      if (isCrossActive) {
+        crosshairEl.style.display = 'flex';
+        updateCrosshair();
+      } else {
+        crosshairEl.style.display = 'none';
+      }
+    }
+
+    function updateCrosshair() {
+      const style = document.querySelector('.cross-style-select').value;
+      const color = document.querySelector('.cross-color-input').value;
+      const size = document.querySelector('.cross-size-input').value;
+
+      crosshairEl.style.setProperty('--cross-color', color);
+
+      if (style === 'plus') {
+        crosshairEl.className = 'cross-plus';
+      } else if (style === 'circle-dot') {
+        crosshairEl.className = 'cross-circle-dot';
+      } else if (style === 'dot') {
+        crosshairEl.className = 'cross-dot';
+      }
+
+      crosshairEl.style.width = size + 'px';
+      crosshairEl.style.height = size + 'px';
+    }
+
+    // Crosshair inputs synchronization
+    document.querySelectorAll('.cross-style-select').forEach(el => {
+      el.addEventListener('change', (e) => {
+        syncControls('.cross-style-select', e.target.value);
+        updateCrosshair();
+      });
+    });
+
+    document.querySelectorAll('.cross-color-input').forEach(el => {
+      el.addEventListener('input', (e) => {
+        syncControls('.cross-color-input', e.target.value);
+        updateCrosshair();
+      });
+    });
+
+    document.querySelectorAll('.cross-size-input').forEach(el => {
+      el.addEventListener('input', (e) => {
+        syncControls('.cross-size-input', e.target.value);
+        updateCrosshair();
+      });
+    });
+
+    // Sensi Generator Logic
+    document.querySelectorAll('.brand-select').forEach(el => {
+      el.addEventListener('change', (e) => syncControls('.brand-select', e.target.value));
+    });
+
+    document.querySelectorAll('.playstyle-select').forEach(el => {
+      el.addEventListener('change', (e) => syncControls('.playstyle-select', e.target.value));
+    });
+
+    function generateSensi() {
+      const brand = document.querySelector('.brand-select').value;
+      const style = document.querySelector('.playstyle-select').value;
+
+      let baseGeral = 95;
+      let baseRed = 90;
+      let base2x = 88;
+      let base4x = 85;
+      let dpi = 411;
+      let btnSize = 50;
+
+      if (brand === 'samsung') {
+        baseGeral = 98; dpi = 580; btnSize = 48;
+      } else if (brand === 'xiaomi') {
+        baseGeral = 94; dpi = 490; btnSize = 52;
+      } else if (brand === 'motorola') {
+        baseGeral = 99; dpi = 560; btnSize = 45;
+      } else if (brand === 'iphone') {
+        baseGeral = 90; dpi = 'Padrão iOS (120Hz)'; btnSize = 42;
+      }
+
+      if (style === 'rush') {
+        baseGeral = Math.min(100, baseGeral + 3);
+        baseRed = Math.min(100, baseRed + 5);
+        if (typeof dpi === 'number') dpi += 40;
+      } else if (style === 'precision') {
+        baseGeral -= 5;
+        baseRed -= 4;
+        if (typeof dpi === 'number') dpi -= 30;
+      }
+
+      const awm = Math.floor(Math.random() * 20) + 30;
+
+      document.querySelectorAll('.sGeral').forEach(el => el.innerText = baseGeral);
+      document.querySelectorAll('.sRed').forEach(el => el.innerText = baseRed);
+      document.querySelectorAll('.s2x').forEach(el => el.innerText = base2x);
+      document.querySelectorAll('.s4x').forEach(el => el.innerText = base4x);
+      document.querySelectorAll('.sAwm').forEach(el => el.innerText = awm);
+      document.querySelectorAll('.sDpi').forEach(el => el.innerText = dpi);
+      document.querySelectorAll('.sBtn').forEach(el => el.innerText = btnSize + '%');
+
+      document.querySelectorAll('.sensi-results').forEach(el => el.style.display = 'block');
+    }
+
+    // Optimizer Logic
+    function optimizeDevice() {
+      document.querySelectorAll('.opt-result').forEach(el => el.innerText = "Otimizando buffer de resposta do toque...");
+      
+      setTimeout(() => {
+        document.querySelectorAll('.opt-result').forEach(el => {
+          el.innerText = "✓ Cache limpo!\n✓ Touch ajustado em 100%\n✓ Sensibilidade otimizada!";
+        });
+      }, 1000);
+    }
+
+    // Floating Overlay Menu Toggle & Drag Logic
+    const floatingMenu = document.getElementById('floatingMenu');
+    const floatingHeader = document.getElementById('floatingHeader');
+    const floatingBubble = document.getElementById('floatingBubble');
+
+    function toggleFloatingMenu() {
+      if (floatingMenu.style.display === 'flex') {
+        closeFloatingMenu();
+      } else {
+        openFloatingMenu();
+      }
+    }
+
+    function openFloatingMenu() {
+      floatingMenu.style.display = 'flex';
+    }
+
+    function closeFloatingMenu() {
+      floatingMenu.style.display = 'none';
+    }
+
+    // Draggable Overlay Menu Logic
+    let isDraggingMenu = false;
+    let menuX = 0, menuY = 0, startMenuX = 0, startMenuY = 0;
+    let menuOffsetX = 20, menuOffsetY = 100;
+
+    floatingHeader.addEventListener('touchstart', dragMenuStart, { passive: false });
+    window.addEventListener('touchend', dragMenuEnd, { passive: false });
+    window.addEventListener('touchmove', dragMenuMove, { passive: false });
+
+    floatingHeader.addEventListener('mousedown', dragMenuStart);
+    window.addEventListener('mouseup', dragMenuEnd);
+    window.addEventListener('mousemove', dragMenuMove);
+
+    function dragMenuStart(e) {
+      if (e.type === 'touchstart') {
+        startMenuX = e.touches[0].clientX - menuOffsetX;
+        startMenuY = e.touches[0].clientY - menuOffsetY;
+      } else {
+        startMenuX = e.clientX - menuOffsetX;
+        startMenuY = e.clientY - menuOffsetY;
+      }
+      isDraggingMenu = true;
+    }
+
+    function dragMenuEnd() {
+      isDraggingMenu = false;
+    }
+
+    function dragMenuMove(e) {
+      if (isDraggingMenu) {
+        e.preventDefault();
+        if (e.type === 'touchmove') {
+          menuX = e.touches[0].clientX - startMenuX;
+          menuY = e.touches[0].clientY - startMenuY;
+        } else {
+          menuX = e.clientX - startMenuX;
+          menuY = e.clientY - startMenuY;
+        }
+        menuOffsetX = menuX;
+        menuOffsetY = menuY;
+        floatingMenu.style.transform = `translate3d(${menuX}px, ${menuY}px, 0)`;
+      }
+    }
+
+    // Draggable Floating Bubble Icon Logic (para reposicionar a bolha na tela)
+    let isDraggingBubble = false;
+    let bubbleX = 0, bubbleY = 0, startBubbleX = 0, startBubbleY = 0;
+    let bubbleOffsetX = 0, bubbleOffsetY = 0;
+
+    floatingBubble.addEventListener('touchstart', dragBubbleStart, { passive: false });
+    window.addEventListener('touchend', dragBubbleEnd, { passive: false });
+    window.addEventListener('touchmove', dragBubbleMove, { passive: false });
+
+    floatingBubble.addEventListener('mousedown', dragBubbleStart);
+    window.addEventListener('mouseup', dragBubbleEnd);
+    window.addEventListener('mousemove', dragBubbleMove);
+
+    function dragBubbleStart(e) {
+      const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+      const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+      startBubbleX = clientX - bubbleOffsetX;
+      startBubbleY = clientY - bubbleOffsetY;
+      isDraggingBubble = true;
+    }
+
+    function dragBubbleEnd() {
+      isDraggingBubble = false;
+    }
+
+    function dragBubbleMove(e) {
+      if (isDraggingBubble) {
+        const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+        const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+        bubbleX = clientX - startBubbleX;
+        bubbleY = clientY - startBubbleY;
+        bubbleOffsetX = bubbleX;
+        bubbleOffsetY = bubbleY;
+        floatingBubble.style.transform = `translate3d(${bubbleX}px, ${bubbleY}px, 0)`;
+      }
+    }
+  </script>
+</body>
+</html>
+```
